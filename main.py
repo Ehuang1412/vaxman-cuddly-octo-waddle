@@ -396,6 +396,9 @@ def startGame():
   c_turn = 0
   c_steps = 0
 
+  # Create a custom event for adding a new enemy
+  ADDENEMY = pygame.USEREVENT + 1
+  pygame.time.set_timer(ADDENEMY, 3000)
 
   # Create the player paddle object
   Pacman = Player( w, p_h, "images/Trollman.png" )
@@ -405,21 +408,22 @@ def startGame():
   Blinky=Ghost( w, b_h, "images/Blinky.png" )
   monsta_list.add(Blinky)
   all_sprites_list.add(Blinky)
-  Blinky2=Ghost( w, b_h, "images/Blinky.png" )
-  monsta_list.add(Blinky2)
-  all_sprites_list.add(Blinky2)
+  blinkies = [Blinky]
 
   Pinky=Ghost( w, m_h, "images/Pinky.png" )
   monsta_list.add(Pinky)
   all_sprites_list.add(Pinky)
+  pinkies = [Pinky]
    
   Inky=Ghost( i_w, m_h, "images/Inky.png" )
   monsta_list.add(Inky)
   all_sprites_list.add(Inky)
+  inkies = [Inky]
    
   Clyde=Ghost( c_w, m_h, "images/Clyde.png" )
   monsta_list.add(Clyde)
   all_sprites_list.add(Clyde)
+  clydes = [Clyde]
 
   # Draw the grid
   for row in range(19):
@@ -477,7 +481,12 @@ def startGame():
                   Pacman.changespeed(0,30)
               if event.key == pygame.K_DOWN:
                   Pacman.changespeed(0,-30)
-          
+
+          # Add a new enemy?
+          if event.type == ADDENEMY:
+              # Duplicate the ghosts and add it to sprite groups 
+              duplicateGhost(blinkies, pinkies, inkies, clydes,monsta_list, all_sprites_list, b_turn, b_steps, wall_list)
+              
       # ALL EVENT PROCESSING SHOULD GO ABOVE THIS COMMENT
    
       # ALL GAME LOGIC SHOULD GO BELOW THIS COMMENT
@@ -494,11 +503,7 @@ def startGame():
       b_steps = returned[1]
       Blinky.changespeed(Blinky_directions,False,b_turn,b_steps,bl)
       Blinky.update(wall_list,False)
-      returned = Blinky2.changespeed(Blinky_directions,False,b_turn,b_steps,bl)
-      b_turn = returned[0]
-      b_steps = returned[1]
-      Blinky2.changespeed(Blinky_directions,False,b_turn,b_steps,bl)
-      Blinky2.update(wall_list,False)
+
       returned = Inky.changespeed(Inky_directions,False,i_turn,i_steps,il)
       i_turn = returned[0]
       i_steps = returned[1]
@@ -581,6 +586,40 @@ def doNext(message,left,all_sprites_list,block_list,monsta_list,pacman_collide,w
       pygame.display.flip()
 
       clock.tick(10)
+def duplicateGhost(b, p, i, c, monsta, all, b_turn, b_steps, wall_list):
+  if(len(b)>0):
+    n = len(b)*2
+    for j in range(n):
+      g = Ghost(w, b_h, "images/Blinky.png")
+      b.append(g)
+      monsta.add(g)
+      all.add(g)
+      # returned = g.changespeed(Blinky_directions,False,b_turn,b_steps,bl)
+      # b_turn = returned[0]
+      # b_steps = returned[1]
+      # g.changespeed(Blinky_directions,False,b_turn,b_steps,bl)
+      # g.update(wall_list,False)      
+  if(len(p)>0):
+    n = len(p)*2
+    for j in range(n):
+      g = Ghost(w, m_h, "images/Pinky.png")
+      p.append(g)
+      monsta.add(g)
+      all.add(g)
+  if(len(i)>0):
+    n = len(i)*2
+    for j in range(n):
+      g = Ghost(w, m_h, "images/Inky.png")
+      i.append(g)
+      monsta.add(g)
+      all.add(g)
+  if(len(c)>0):
+    n = len(c)*2
+    for j in range(n):
+      g = Ghost(w, m_h, "images/Clyde.png")
+      c.append(g)
+      monsta.add(g)
+      all.add(g)
 
 startGame()
 
