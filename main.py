@@ -405,6 +405,9 @@ def startGame():
   Blinky=Ghost( w, b_h, "images/Blinky.png" )
   monsta_list.add(Blinky)
   all_sprites_list.add(Blinky)
+  Blinky2=Ghost( w, b_h, "images/Blinky.png" )
+  monsta_list.add(Blinky2)
+  all_sprites_list.add(Blinky2)
 
   Pinky=Ghost( w, m_h, "images/Pinky.png" )
   monsta_list.add(Pinky)
@@ -491,7 +494,11 @@ def startGame():
       b_steps = returned[1]
       Blinky.changespeed(Blinky_directions,False,b_turn,b_steps,bl)
       Blinky.update(wall_list,False)
-
+      returned = Blinky2.changespeed(Blinky_directions,False,b_turn,b_steps,bl)
+      b_turn = returned[0]
+      b_steps = returned[1]
+      Blinky2.changespeed(Blinky_directions,False,b_turn,b_steps,bl)
+      Blinky2.update(wall_list,False)
       returned = Inky.changespeed(Inky_directions,False,i_turn,i_steps,il)
       i_turn = returned[0]
       i_steps = returned[1]
